@@ -11,7 +11,7 @@ WORKDIR /mtproxy
 
 # Copy compiled binary from build artifact
 COPY mtproxy-bin.tar.gz /tmp/mtproxy-bin.tar.gz
-RUN tar -xzf /tmp/mtproxy-bin.tar.gz -C /usr/local/bin \
+RUN tar -xzf /tmp/mtproxy-bin.tar.gz -C / \
     && rm /tmp/mtproxy-bin.tar.gz \
     && chmod +x /usr/local/bin/mtproto-proxy
 
