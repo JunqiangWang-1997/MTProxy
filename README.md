@@ -130,6 +130,8 @@ docker run -d \
 
 The container automatically downloads `proxy-secret` and `proxy-multi.conf` into `/data` if they are missing. Override environment variables to change the listening ports, worker count, or run user.
 
+> Note: `docker-entrypoint.sh` trims whitespace from `SECRET` and ensures container PIDs stay below 65535 to match upstream assumptions.
+
 ### GitHub Actions
 This repo includes `.github/workflows/docker-image.yml` which builds and publishes the image to GitHub Container Registry on every push to `master` or tags starting with `v`.
 

@@ -12,6 +12,16 @@ if [ -z "${SECRET}" ]; then
   exit 1
 fi
 
+SECRET=$(printf '%s' "${SECRET}" | tr -d '[:space:]')
+
+# Avoid PID assertions by keeping next PID small
+if [ -w /proc/sys/kernel/pid_max ]; then
+  echo 65535 > /proc/sys/kernel/pid_max || true
+fi
+if [ -w /proc/sys/kernel/ns_last_pid ]; then
+  echo 100 > /proc/sys/kernel/ns_last_pid || true
+fi
+
 mkdir -p "${DATA_DIR}"
 
 # Download config/secret if not present

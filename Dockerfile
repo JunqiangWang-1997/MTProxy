@@ -3,9 +3,12 @@
 FROM debian:stable-slim AS builder
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-       ca-certificates git build-essential libssl-dev zlib1g-dev \
-    && rm -rf /var/lib/apt/lists/*
+     && apt-get install -y --no-install-recommends \
+         ca-certificates git build-essential libssl-dev zlib1g-dev procps \
+     && rm -rf /var/lib/apt/lists/*
+
+# Align PID behavior with upstream expectations
+RUN sysctl -w kernel.pid_max=65535
 
 WORKDIR /src
 
@@ -19,9 +22,9 @@ RUN make -j"$(nproc)" && cp objs/bin/mtproto-proxy /usr/local/bin/mtproto-proxy
 FROM debian:stable-slim
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-       ca-certificates curl wget \
-    && rm -rf /var/lib/apt/lists/*
+     && apt-get install -y --no-install-recommends \
+         ca-certificates curl wget iproute2 procps \
+     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /mtproxy
 
