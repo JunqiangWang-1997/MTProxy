@@ -1,32 +1,19 @@
-# Multi-stage build for MTProxy
-
-FROM debian:stable-slim AS builder
-
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-       ca-certificates git build-essential libssl-dev zlib1g-dev procps \
-    && rm -rf /var/lib/apt/lists/*
-
-WORKDIR /src
-
-# Copy source
-COPY . .
-
-# Build
-RUN make -j"$(nproc)" && cp objs/bin/mtproto-proxy /usr/local/bin/mtproto-proxy
-
+# Build MTProxy runtime image using prebuilt binary archive
 
 FROM debian:stable-slim
 
 RUN apt-get update \
-     && apt-get install -y --no-install-recommends \
-         ca-certificates curl wget iproute2 procps \
-     && rm -rf /var/lib/apt/lists/*
+    && apt-get install -y --no-install-recommends \
+       ca-certificates curl wget iproute2 procps \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /mtproxy
 
-# Copy binary from builder
-COPY --from=builder /usr/local/bin/mtproto-proxy /usr/local/bin/mtproto-proxy
+# Copy prebuilt binary archive and extract
+COPY mtproxy-bin.tar.gz /tmp/mtproxy-bin.tar.gz
+RUN tar -xzf /tmp/mtproxy-bin.tar.gz --strip-components=2 -C /usr/local/bin \
+    && rm /tmp/mtproxy-bin.tar.gz \
+    && chmod +x /usr/local/bin/mtproto-proxy
 
 # Default data files location (can be overriden by mounting volume)
 VOLUME ["/data"]
