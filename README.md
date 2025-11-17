@@ -125,7 +125,7 @@ docker run -d \
 	-p 443:443 \
 	-p 8888:8888 \
 	-v $(pwd)/data:/data \
-	ghcr.io/<owner>/mtproxy:latest
+	ghcr.io/junqiangwang-1997/mtproxy:latest
 ```
 
 The container automatically downloads `proxy-secret` and `proxy-multi.conf` into `/data` if they are missing. Override environment variables to change the listening ports, worker count, or run user.
@@ -136,5 +136,5 @@ This repo includes `.github/workflows/docker-image.yml` which builds and publish
 To pull a published image:
 ```bash
 echo "$GITHUB_TOKEN" | docker login ghcr.io -u <github-username> --password-stdin
-docker pull ghcr.io/<owner>/mtproxy:latest
+docker pull ghcr.io/junqiangwang-1997/mtproxy:latest
 ```
