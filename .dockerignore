@@ -1,0 +1,10 @@
+objs
+.dep
+.git
+.gitignore
+Dockerfile
+README.md
+GPLv2
+LGPLv2
+**/*.o
+**/*.a

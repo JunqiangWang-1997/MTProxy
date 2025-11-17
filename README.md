@@ -107,3 +107,34 @@ systemctl enable MTProxy.service
 ## Docker image
 Telegram is also providing [official Docker image](https://hub.docker.com/r/telegrammessenger/proxy/).
 Note: the image is outdated.
+
+### Build with Docker
+```bash
+docker build -t mtproxy:local .
+```
+
+### Run container
+```bash
+docker run -d \
+	--name mtproxy \
+	-e SECRET="<client secret>" \
+	-e TAG="<optional proxy tag>" \
+	-e PORT=443 \
+	-e STATS_PORT=8888 \
+	-e WORKERS=1 \
+	-p 443:443 \
+	-p 8888:8888 \
+	-v $(pwd)/data:/data \
+	ghcr.io/<owner>/mtproxy:latest
+```
+
+The container automatically downloads `proxy-secret` and `proxy-multi.conf` into `/data` if they are missing. Override environment variables to change the listening ports, worker count, or run user.
+
+### GitHub Actions
+This repo includes `.github/workflows/docker-image.yml` which builds and publishes the image to GitHub Container Registry on every push to `master` or tags starting with `v`.
+
+To pull a published image:
+```bash
+echo "$GITHUB_TOKEN" | docker login ghcr.io -u <github-username> --password-stdin
+docker pull ghcr.io/<owner>/mtproxy:latest
+```
