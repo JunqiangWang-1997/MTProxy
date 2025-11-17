@@ -121,7 +121,7 @@ docker run -d \
 	--name mtproxy \
 	-e SECRET="<client secret>" \
 	-e TAG="<optional proxy tag>" \
-	-e PORT=443 \
+	-e PORT=52322 \
 	-e STATS_PORT=8888 \
 	-e WORKERS=1 \
 	-p 443:443 \
@@ -130,7 +130,7 @@ docker run -d \
 	ghcr.io/junqiangwang-1997/mtproxy:latest
 ```
 
-The container automatically downloads `proxy-secret` and `proxy-multi.conf` into `/data` if they are missing. Override environment variables to change the listening ports, worker count, or run user.
+The container automatically downloads `proxy-secret` and `proxy-multi.conf` into `/data` if they are missing. Override environment variables to change the listening ports (defaults to 52322), worker count, or run user.
 
 > Note: `docker-entrypoint.sh` trims whitespace from `SECRET` and ensures container PIDs stay below 65535 to match upstream assumptions.
 

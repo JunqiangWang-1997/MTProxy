@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-: "${PORT:=443}"
+: "${PORT:=52322}"
 : "${STATS_PORT:=8888}"
 : "${WORKERS:=1}"
 : "${USER:=nobody}"
