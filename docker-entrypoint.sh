@@ -2,7 +2,6 @@
 set -e
 
 : "${PORT:=443}"
-: "${HTTP_PORT:=${PORT}}"
 : "${STATS_PORT:=8888}"
 : "${WORKERS:=1}"
 : "${USER:=nobody}"
@@ -26,7 +25,7 @@ if [ ! -f "${DATA_DIR}/proxy-multi.conf" ]; then
   curl -fsSL https://core.telegram.org/getProxyConfig -o "${DATA_DIR}/proxy-multi.conf"
 fi
 
-CMD="mtproto-proxy -u ${USER} -p ${PORT} -H ${HTTP_PORT} -S ${SECRET} --aes-pwd ${DATA_DIR}/proxy-secret ${DATA_DIR}/proxy-multi.conf -M ${WORKERS}"
+CMD="mtproto-proxy -u ${USER} -p ${STATS_PORT} -H ${PORT} -S ${SECRET} --aes-pwd ${DATA_DIR}/proxy-secret ${DATA_DIR}/proxy-multi.conf -M ${WORKERS}"
 
 if [ -n "${TAG}" ]; then
   CMD="${CMD} -P ${TAG}"
