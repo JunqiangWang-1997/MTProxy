@@ -1,4 +1,4 @@
-# Build MTProxy runtime image using prebuilt binary archive
+# Build MTProxy from source
 
 FROM debian:stable-slim
 
@@ -9,9 +9,9 @@ RUN apt-get update \
 
 WORKDIR /mtproxy
 
-# Copy prebuilt binary archive and extract
+# Copy compiled binary from build artifact
 COPY mtproxy-bin.tar.gz /tmp/mtproxy-bin.tar.gz
-RUN tar -xzf /tmp/mtproxy-bin.tar.gz --strip-components=2 -C /usr/local/bin \
+RUN tar -xzf /tmp/mtproxy-bin.tar.gz -C /usr/local/bin \
     && rm /tmp/mtproxy-bin.tar.gz \
     && chmod +x /usr/local/bin/mtproto-proxy
 

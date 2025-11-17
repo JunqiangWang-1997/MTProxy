@@ -113,7 +113,7 @@ Note: the image is outdated.
 docker build -t mtproxy:local .
 ```
 
-> The build uses the precompiled binary packaged in `mtproxy-bin.tar.gz` (created from `objs/bin/mtproto-proxy`). Rebuild that archive if you recompile MTProxy.
+> The Docker image uses a binary compiled in GitHub Actions. The compilation happens automatically in the cloud using Debian slim containers.
 
 ### Run container
 ```bash
