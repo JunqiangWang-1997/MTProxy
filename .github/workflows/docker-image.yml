@@ -16,11 +16,50 @@ permissions:
   packages: write
 
 jobs:
+  build-binary:
+    runs-on: ubuntu-latest
+    container:
+      image: debian:stable-slim
+    steps:
+      - name: Install build dependencies
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends \
+            build-essential \
+            libssl-dev \
+            zlib1g-dev \
+            git \
+            ca-certificates
+          rm -rf /var/lib/apt/lists/*
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build MTProxy
+        run: |
+          make
+          mkdir -p mtproxy-bin/usr/local/bin
+          cp objs/bin/mtproto-proxy mtproxy-bin/usr/local/bin/
+          tar -czf mtproxy-bin.tar.gz -C mtproxy-bin .
+
+      - name: Upload binary artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mtproxy-binary
+          path: mtproxy-bin.tar.gz
+          retention-days: 1
+
   docker:
+    needs: build-binary
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Download binary artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: mtproxy-binary
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
