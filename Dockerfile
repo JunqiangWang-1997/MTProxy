@@ -3,12 +3,9 @@
 FROM debian:stable-slim AS builder
 
 RUN apt-get update \
-     && apt-get install -y --no-install-recommends \
-         ca-certificates git build-essential libssl-dev zlib1g-dev procps \
-     && rm -rf /var/lib/apt/lists/*
-
-# Align PID behavior with upstream expectations
-RUN sysctl -w kernel.pid_max=65535
+    && apt-get install -y --no-install-recommends \
+       ca-certificates git build-essential libssl-dev zlib1g-dev procps \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /src
 
