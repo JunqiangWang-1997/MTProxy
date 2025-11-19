@@ -116,23 +116,46 @@ docker build -t mtproxy:local .
 > The Docker image uses a binary compiled in GitHub Actions. The compilation happens automatically in the cloud using Debian slim containers.
 
 ### Run container
+
+**Basic usage (bridge network with NAT support)**:
 ```bash
 docker run -d \
-	--name mtproxy \
-	-e SECRET="<client secret>" \
-	-e TAG="<optional proxy tag>" \
-	-e PORT=52322 \
-	-e STATS_PORT=8888 \
-	-e WORKERS=1 \
-	-p 443:443 \
-	-p 8888:8888 \
-	-v $(pwd)/data:/data \
-	ghcr.io/junqiangwang-1997/mtproxy:latest
+  --name mtproxy \
+  -e SECRET="<client secret>" \
+  -e TAG="<optional proxy tag>" \
+  -p 443:443 \
+  -p 8888:8888 \
+  ghcr.io/junqiangwang-1997/mtproxy:latest
 ```
 
-The container automatically downloads `proxy-secret` and `proxy-multi.conf` into `/data` if they are missing. Override environment variables to change the listening ports (defaults to 52322), worker count, or run user.
+**Advanced options**:
+```bash
+docker run -d \
+  --name mtproxy \
+  -e SECRET="<client secret>" \
+  -e TAG="<optional proxy tag>" \
+  -e PORT=443 \
+  -e STATS_PORT=8888 \
+  -e WORKERS=1 \
+  -e PUBLIC_IP="<your public IP>" \
+  -p 443:443 \
+  -p 8888:8888 \
+  ghcr.io/junqiangwang-1997/mtproxy:latest
+```
 
-> Note: `docker-entrypoint.sh` trims whitespace from `SECRET` and ensures container PIDs stay below 65535 to match upstream assumptions.
+**Environment Variables**:
+- `SECRET` (required): Client secret for connecting to the proxy
+- `TAG` (optional): Proxy tag from [@MTProxybot](https://t.me/MTProxybot)
+- `PORT` (optional, default: 443): Port for client connections
+- `STATS_PORT` (optional, default: 8888): Local stats port
+- `WORKERS` (optional, default: 1): Number of worker processes
+- `PUBLIC_IP` (optional): Manually specify public IP (auto-detected if not set)
+- `DATA_DIR` (optional, default: /tmp): Directory for proxy-secret and proxy-multi.conf
+
+**NAT Mode**:
+The container automatically detects NAT environments (like Docker bridge network) and configures the `--nat-info` parameter. This ensures proper IP forwarding to Telegram servers. You can manually specify `PUBLIC_IP` if auto-detection fails.
+
+The container automatically downloads `proxy-secret` and `proxy-multi.conf` if they are missing.
 
 ### GitHub Actions
 This repo includes `.github/workflows/docker-image.yml` which builds and publishes the image to GitHub Container Registry on every push to `master` or tags starting with `v`.

@@ -20,6 +20,11 @@ VOLUME ["/data"]
 
 EXPOSE 443 8888
 
+# Environment variable defaults
+ENV PORT=443 \
+    STATS_PORT=8888 \
+    WORKERS=1
+
 # Entrypoint script expects:
 #   - SECRET: user secret
 #   - TAG (optional): proxy tag for MTProxy bot
